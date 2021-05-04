@@ -2,26 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\Event;
+use App\Models\Article;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Session;
 
-class EventsController extends Controller
+class ArticlesController extends Controller
 {
-    /**
+      /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $events = Event::orderBy('created_at', 'DESC')->paginate(9);
-        return view('events.index', compact('events'));
+        $articles = Article::orderBy('created_at', 'DESC')->paginate(9);
+        return view('articles.index', compact('articles'));
     }
 
     /**
@@ -31,8 +26,8 @@ class EventsController extends Controller
      */
     public function create()
     {
-        $events = Event::all();
-        return view('events.create', compact('events'));
+        $articles = Article::all();
+        return view('articles.create', compact('articles'));
     }
 
     /**
@@ -41,26 +36,25 @@ class EventsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Event $event)
+    public function store(Article $article)
     {
         $data = request()->validate([
-            'name' => 'required',
-            'file' => 'required',
+            'title' => 'required',
+            'description' => 'required',
             'image' => 'required|image',
         ]);
     
             $imagePath = request('image')->store('uploads', 'public');
-            $filePath = request('file')->store('uploads', 'public');
     
             // $imagePath = cloudinary()->upload($request->file('image')->getRealPath())->getSecurePath();
     
-            auth()->user()->events()->create([
-                'name' => $data['name'],
-                'file' => $filePath,
+            auth()->user()->articles()->create([
+                'title' => $data['title'],
+                'description' => $data['description'],
                 'image' => $imagePath,
             ]);
     
-            return redirect('/events');
+            return redirect('/articles');
     }
 
     /**
@@ -69,9 +63,9 @@ class EventsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Event $event)
+    public function show(Article $article)
     {
-        return view('events.show', compact('event'));
+        return view('articles.show', compact('article'));
     }
 
     /**
@@ -82,8 +76,8 @@ class EventsController extends Controller
      */
     public function edit($id)
     {
-        $event = Event::find($id);
-        return view('events.edit', compact('event'));
+        $article = Article::find($id);
+        return view('articles.edit', compact('article'));
     }
 
     /**
@@ -93,18 +87,20 @@ class EventsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Event $event)
+    public function update(Article $article)
     {
         $data = request()->validate([
-            'name' => 'required',
+            'title' => 'required',
+            'description' => 'required',
         ]);
     
     
-        auth()->user()->events()->update([
-            'name' => $data['name'],
+        auth()->user()->articles()->update([
+            'title' => $data['title'],
+            'description' => $data['description'],
         ]);
     
-        return redirect("events/{$event->id}");
+        return redirect("articles/{$article->id}");
     }
 
     /**
@@ -113,28 +109,28 @@ class EventsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Event $event)
+    public function destroy(Article $article)
     {
-        $event->delete();
+        $article->delete();
 
-        return redirect('/events');
+        return redirect('/articles');
     }
 
-    public function editImage(Event $event) {
-        return view('events.image', compact('event'));
+    public function editImage(Article $article) {
+        return view('articles.image', compact('article'));
     }
     
-    public function updateImage(Event $event) {
+    public function updateImage(Article $article) {
         $data = request()->validate([
             'image' => 'required|image',
         ]);
     
         $imagePath = request('image')->store('uploads', 'public');
     
-        auth()->user()->events()->update([
+        auth()->user()->articles()->update([
             'image' => $imagePath,
         ]);
     
-        return redirect("events/{$event->id}");
+        return redirect("articles/{$article->id}");
     }
 }

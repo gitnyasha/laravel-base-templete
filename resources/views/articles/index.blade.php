@@ -2,14 +2,13 @@
 
 @section('content')
 <h2 class="pt-3">Dashboard</h2>
-<a href="/events/create" class="btn btn-primary">Add New</a>
+<a href="/articles/create" class="btn btn-primary">Add New</a>
 <div class="table-responsive mt-3">
   <table class="table table-striped table-sm">
     <thead>
       <tr>
         <th>#</th>
-        <th>Name</th>
-        <th>file</th>
+        <th>Title</th>
         <th>image</th>
         <th>Edit</th>
         <th>Delete</th>
@@ -17,30 +16,29 @@
       </tr>
     </thead>
     <tbody>
-      @foreach ($events as $item)
+      @foreach ($articles as $item)
       <tr>
         <td>{{ $item->id }}</td>
-        <td><a href="/events/{{ $item->id }}">{{ $item->name }}</a></td>
-        <td><a href="/storage/{{ $item->file }}">Download Pdf</a></td>
-        <td><img src="/storage/{{ $item->image }}" class="img-thumbnail" alt="event"></td>
+        <td><a href="/articles/{{ $item->id }}">{{ $item->title }}</a></td>
+        <td><img src="/storage/{{ $item->image }}" class="img-thumbnail" alt="article"></td>
         <td>
-          <a href="/events/{{ $item->id }}/edit" class="btn btn-success"><i class="fa fa-pencil"></i></a>
+          <a href="/articles/{{ $item->id }}/edit" class="btn btn-success"><i class="fa fa-pencil"></i></a>
         </td>
         <td>
-          <form action="/events/{{ $item->id }}" method="post">
+          <form action="/articles/{{ $item->id }}" method="post">
             @csrf
             @method('delete')
             <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
           </form>
         </td>
         <td>
-          <a href="/events/image/{{ $item->id }}/edit" class="btn btn-success"><i class="fa fa-pencil"></i> Image</a>
+          <a href="/articles/image/{{ $item->id }}/edit" class="btn btn-success"><i class="fa fa-pencil"></i> Image</a>
         </td>
       </tr>
       @endforeach
     </tbody>
   </table>
 
-  {{ $events->links() }}
+  {{ $articles->links() }}
 </div>
 @endsection

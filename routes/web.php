@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EventsController;
+use App\Http\Controllers\ArticlesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,7 +22,12 @@ Route::get('/', function () {
 });
 
 Route::resource('events', EventsController::class);
+Route::get('events/image/{event}/edit', [EventsController::class, 'editImage']);
+Route::patch('events/image/{event}', [EventsController::class, 'updateImage']);
 
+Route::resource('articles', ArticlesController::class);
+Route::get('articles/image/{article}/edit', [ArticlesController::class, 'editImage']);
+Route::patch('articles/image/{article}', [ArticlesController::class, 'updateImage']);
 
 Route::get('/home', 'App\Http\Controllers\HomeController@index')->name('dashboard');
 
